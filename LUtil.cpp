@@ -1,5 +1,8 @@
 #include "LUtil.h"
 
+#define pi 3.142857 
+
+
 
 //"gColorMode" controls whether we render a solid cyan square or a multicolored square.
 int gColorMode = COLOR_MODE_MULTI;
@@ -19,6 +22,13 @@ int right_wall=SCREEN_WIDTH-50;
 //left/right paddle and factor to move
 int factor=0,paddle_left=0,paddle_right=0;
 
+
+//x and y for ball center
+int x=50,y=SCREEN_HEIGHT-50-PADDLE_HEIGHT ;
+//h and v are factors to hold +ve/-ve signs for movement directions
+int h=1,v=-1;
+//to chk if ball is movin up/down or right/left
+int flag_down=-1,flag_left=-1; // (h/v)*cor-ord value much give appropriate dir wrt the x/y axes
 
 bool initGL()
 {
@@ -52,6 +62,17 @@ void update()
 
 }
 
+void DrawCircle(float cx, float cy, float r, int num_segments) {
+    glBegin(GL_LINE_LOOP);
+    for (int ii = 0; ii < num_segments; ii++)   {
+        float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle 
+        float x = r * cosf(theta);//calculate the x component 
+        float y = r * sinf(theta);//calculate the y component 
+        glVertex2f(x + cx, y + cy);//output vertex 
+    }
+    glEnd();
+}
+
 void render()
 {
     //Clear color buffer and set it to the color specified in glClearColor() in initGL()
@@ -66,8 +87,7 @@ void render()
    
 
     //Render Quad
-    //if( gColorMode == COLOR_MODE_CYAN )
-    //{
+    
         //SCREEN BORDERS
         glBegin(GL_LINE_STRIP);
             glColor3f(0,1,1);
@@ -108,20 +128,93 @@ void render()
         glutSwapBuffers();
 
 
+        //Game Physics - Bricks
+        
+        
+        //Game Physics - Ball
 
-    //}
+        //indicating change in x and y directions
+        int delta_x=5,delta_y=10;
+              
+        
+        int ctr=0;
+
+        DrawCircle(x,y,BALL_RADII,8);
+        x=x+(delta_x * h) ;
+        y=y+(delta_y * v) ;
 
 
-    glutSwapBuffers();//same as glflush() in single buffer mode
+      
+            int i=0;
+            
+                        
+            //BOUNDRY CONDITIONS
+
+            //CHECK RIGHT WALL IMPACT 
+            if(x==right_wall && flag_left==-1)
+            {
+                flag_left=1;
+                h=-1;
+             
+            }
+            //CHECK LEFT WALL IMPACT
+            if(x==left_wall && flag_left==1) 
+            {
+                flag_left=-1;
+                h=1;
+                
+            }
+
+            //CHECK TOP WALL IMPACT
+            if(y==-(SCREEN_HEIGHT-50) && flag_down==-1)//0
+            {
+                flag_down=1;
+                v=1;
+               
+            }
+
+
+            //CHECK BOTTOME PADDLE IMPACT
+            if( (x > paddle_left && x < paddle_right) && y==SCREEN_HEIGHT-50-PADDLE_HEIGHT && flag_down==1 )
+            {   printf("HIT\n");
+                flag_down=-1;
+                v=-1;
+                
+            }
+
+            //Mainly for debugging
+            //printf("flag_down = %d\n",flag_down);
+            //if(y>SCREEN_HEIGHT-200)
+            //{
+            //    printf("%d  \t %d  \t %d\n",(x > paddle_left && x < paddle_right),y==SCREEN_HEIGHT-50-PADDLE_HEIGHT,flag_down==1 );
+            //    printf("y = %d \t paddle_y= %d \n",y,SCREEN_HEIGHT-50-PADDLE_HEIGHT);
+            //}
+            //PADDLE IMPACT CHECK
+            //x < paddle_left && x > paddle_right &&
+
+            if( y>SCREEN_HEIGHT)//condition when ball wont be within the reach of the paddle
+            {
+               //printf("x=%d  \t  paddle_left=%d \t paddle_right=%d\n",x,paddle_left,paddle_right);
+               printf("GAME OVER\n");
+               exit(0);
+            }
+
+            
+ 
+        
+
+
+    glutSwapBuffers(); //same as glflush() in single buffer mode
 
 }
 
 void runMainLoop(int val)
 {
+  
     //Frame Logic
     update();
     render();
-
+    
     //Run frame one more time
     glutTimerFunc(1000/SCREEN_FPS ,runMainLoop , val );
 }

@@ -9,7 +9,7 @@ CC = g++
 COMPILER_FLAGS = -w
 
 #LINKER_FLAGS specifies the libraries we're linking against
-LINKER_FLAGS = -lGL -lGLU -lglut
+LINKER_FLAGS = -lGL -lGLU -lglut -lm
 
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = glutitout

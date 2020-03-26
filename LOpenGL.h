@@ -5,5 +5,6 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <stdio.h>
-
+#include <math.h>
+#include <time.h>
 #endif

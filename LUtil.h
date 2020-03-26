@@ -8,6 +8,9 @@ const int SCREEN_FPS =60;
 //Step size 
 const float STEP_SIZE=(SCREEN_WIDTH-50)/5;
 
+//Ball radii
+const float BALL_RADII=15;
+
 //paddle size
 const int PADDLE_WIDTH=SCREEN_WIDTH/5;
 const int PADDLE_HEIGHT=30;
