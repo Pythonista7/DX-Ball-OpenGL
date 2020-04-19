@@ -1,5 +1,6 @@
 #include "LOpenGL.h"
 
+
 const int SCREEN_WIDTH =640;
 const int SCREEN_HEIGHT =480;
 const int SCREEN_FPS =200;
@@ -66,4 +67,10 @@ Post Condition:
  -Cycles through different projection scales when the user presses e
 Side Effects:
  -If the user presses e, the matrix mode is set to projection
+*/
+
+
+int random_number_in_range(int start,int end) ;
+/*
+Utility Function to generate random numbers in a range
 */

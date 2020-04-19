@@ -24,17 +24,28 @@ int right_wall=SCREEN_WIDTH-50;
 int factor=0,paddle_left=0,paddle_right=0;
 
 
-//indicating change in x and y directions
-//Dictates ball speed
-int delta_x=10,delta_y=15;
 
 //x and y for ball center
-int x=50,y=SCREEN_HEIGHT-50-PADDLE_HEIGHT ;
+float x=50,y=SCREEN_HEIGHT-50-PADDLE_HEIGHT ;
 //h and v are factors to hold +ve/-ve signs for movement directions
 int h=1,v=-1;
 //to chk if ball is movin up/down or right/left
 int flag_down=-1,flag_left=-1; // (h/v)*cor-ord value much give appropriate dir wrt the x/y axes
 
+//util function to generate random number in a given range
+int random_number_in_range(int start,int end) 
+{
+  //srand((unsigned) time(0));
+  int randomNumber;
+  
+  randomNumber = (rand() % end) + start;
+  return(randomNumber);
+}
+
+
+//indicating change in x and y directions
+//Dictates ball speed
+float delta_x_= 10+random_number_in_range(0,5),delta_y_= 15+random_number_in_range(0,5);
 
 
 bool initGL()
@@ -112,6 +123,10 @@ void render()
         glutSwapBuffers();
 
 
+        //Game Physics - Bricks
+
+
+
         //Moveable Paddle
         
         glBegin(GL_POLYGON);
@@ -137,34 +152,35 @@ void render()
         glutSwapBuffers();
 
 
-        //Game Physics - Bricks
-        
+       
+
         
         //Game Physics - Ball
 
         //speeding up the ball
-
+       
         DrawCircle(x,y,BALL_RADII,8);
-        x=x+(delta_x * h) ;
-        y=y+(delta_y * v) ;
+        //Adding randomness to the ball movement speed
+        
+        x=x+float(delta_x_ * h) ;
+        y=y+float(delta_y_ * v) ;
 
         
 
       
             int i=0;
             
-                        
             //BOUNDRY CONDITIONS
 
             //CHECK RIGHT WALL IMPACT 
-            if(x==right_wall && flag_left==-1)
+            if(x>=right_wall && flag_left==-1)
             {
                 flag_left=1;
                 h=-1;
              
             }
             //CHECK LEFT WALL IMPACT
-            if(x==left_wall && flag_left==1) 
+            if(x<=left_wall && flag_left==1) 
             {
                 flag_left=-1;
                 h=1;
@@ -181,12 +197,16 @@ void render()
 
 
             //CHECK BOTTOME PADDLE IMPACT
-            if( (x > paddle_left && x < paddle_right) && y==SCREEN_HEIGHT-50-PADDLE_HEIGHT && flag_down==1 )
-            {   printf("delta_y=%d \t HIT\n",delta_y);
+            if( (x > paddle_left && x < paddle_right) && y>=SCREEN_HEIGHT-50-PADDLE_HEIGHT && flag_down==1 )
+            {   
+                // printf("%d",random_number_in_range(0,3));
+                delta_y_+=random_number_in_range(0,3);
+                delta_x_+=random_number_in_range(0,3);
+                //printf("delta_y=%d \t",delta_y_);
+                //printf("delta_x=%d \t HIT\n",delta_x_);
                 score++;
                 flag_down=-1;
                 v=-1;
-                
             }
 
             //Mainly for debugging
@@ -224,7 +244,7 @@ void runMainLoop(int val)
     render();
     
     //Run frame one more time
-    glutTimerFunc(1000/SCREEN_FPS ,runMainLoop , val );
+    glutTimerFunc(10,runMainLoop,val);//1000/SCREEN_FPS ,runMainLoop , val );
 }
 
 void handleKeys(unsigned char key,int x ,int y)
