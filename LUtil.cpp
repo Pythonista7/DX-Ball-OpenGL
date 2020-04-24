@@ -171,7 +171,6 @@ void render()
             int i=0;
             
             //BOUNDRY CONDITIONS
-
             //CHECK RIGHT WALL IMPACT 
             if(x>=right_wall && flag_left==-1)
             {
