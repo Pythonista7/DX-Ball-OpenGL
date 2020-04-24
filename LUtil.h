@@ -1,24 +1,24 @@
 #include "LOpenGL.h"
 
-const int SCREEN_WIDTH =640;
-const int SCREEN_HEIGHT =480;
-const int SCREEN_FPS =200;
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
+const int SCREEN_FPS = 200;
 
+const int BLOCK_HEIGHT = 200;
 
-//Step size 
-const float STEP_SIZE=(SCREEN_WIDTH-50)/5;
+//Step size
+const float STEP_SIZE = (SCREEN_WIDTH - 50) / 5;
 
 //Ball radii
-const float BALL_RADII=15;
+const float BALL_RADII = 15;
 
 //paddle size
-const int PADDLE_WIDTH=SCREEN_WIDTH/5;
-const int PADDLE_HEIGHT=30;
+const int PADDLE_WIDTH = SCREEN_WIDTH / 5;
+const int PADDLE_HEIGHT = 30;
 
 //color modes
 const int COLOR_MODE_CYAN = 0;
-const int COLOR_MODE_MULTI =1;
-
+const int COLOR_MODE_MULTI = 1;
 
 bool initGL();
 /*
@@ -34,6 +34,29 @@ Side Effects:
  -Matrix mode is set to modelview
  -Clear color is set to black
 */
+
+//creating linked list for the last line.
+struct Xval
+{
+    float data;
+    struct Xval *next;
+};
+struct Yval
+{
+    float data;
+    struct Yval *next;
+};
+typedef struct Xval *X;
+typedef struct Yval *Y;
+
+X xAxisHead = (X)malloc(sizeof(struct Xval));
+Y yAxisHead = (Y)malloc(sizeof(struct Yval));
+
+//header files for linkked list
+X createNodeX();
+Y createNodeY();
+X addNodeX(X head, int value);
+Y addNodeY(Y head, int value);
 
 void update();
 /*
@@ -57,7 +80,7 @@ Side Effects:
  -Swaps the front/back buffer
 */
 
-void handleKeys( unsigned char key, int x, int y );
+void handleKeys(unsigned char key, int x, int y);
 /*
 Pre Condition:
  -None
