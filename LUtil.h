@@ -1,15 +1,9 @@
 #include "LOpenGL.h"
 
-<<<<<<< HEAD
 
-const int SCREEN_WIDTH =640;
-const int SCREEN_HEIGHT =480;
-const int SCREEN_FPS =200;
-=======
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 const int SCREEN_FPS = 200;
->>>>>>> Aayush
 
 const int BLOCK_HEIGHT = 200;
 
