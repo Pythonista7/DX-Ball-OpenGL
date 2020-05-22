@@ -22,22 +22,15 @@ int right_wall = SCREEN_WIDTH - 50;
 //left/right paddle and factor to move
 int factor = 0, paddle_left = 0, paddle_right = 0;
 
-<<<<<<< HEAD
-
-//x and y for ball center
-float x=50,y=SCREEN_HEIGHT-50-PADDLE_HEIGHT ;
-=======
 //indicating change in x and y directions
 //Dictates ball speed
 int delta_x = 10, delta_y = 15;
 
 //x and y for ball center
 int x = 50, y = SCREEN_HEIGHT - 50 - PADDLE_HEIGHT;
->>>>>>> Aayush
 //h and v are factors to hold +ve/-ve signs for movement directions
 int h = 1, v = -1;
 //to chk if ball is movin up/down or right/left
-<<<<<<< HEAD
 int flag_down=-1,flag_left=-1; // (h/v)*cor-ord value much give appropriate dir wrt the x/y axes
 
 //util function to generate random number in a given range
@@ -55,9 +48,6 @@ int random_number_in_range(int start,int end)
 //Dictates ball speed
 float delta_x_= 10+random_number_in_range(0,5),delta_y_= 15+random_number_in_range(0,5);
 
-=======
-int flag_down = -1, flag_left = -1; // (h/v)*cor-ord value much give appropriate dir wrt the x/y axes
->>>>>>> Aayush
 
 bool initGL()
 {
@@ -118,7 +108,6 @@ void render()
     glLoadIdentity();
 
     //Render Quad
-<<<<<<< HEAD
     
         //SCREEN BORDERS
         glBegin(GL_LINE_STRIP);
@@ -242,8 +231,6 @@ void render()
             
  
         
-=======
->>>>>>> Aayush
 
     //SCREEN BORDERS
     glBegin(GL_LINE_STRIP);
@@ -314,7 +301,7 @@ void render()
     x = x + (delta_x * h);
     y = y + (delta_y * v);
 
-    int i = 0;
+    i = 0;
 
     //BOUNDRY CONDITIONS
 
@@ -376,11 +363,7 @@ void runMainLoop(int val)
     render();
 
     //Run frame one more time
-<<<<<<< HEAD
-    glutTimerFunc(10,runMainLoop,val);//1000/SCREEN_FPS ,runMainLoop , val );
-=======
     glutTimerFunc(1000 / SCREEN_FPS, runMainLoop, val);
->>>>>>> Aayush
 }
 
 void handleKeys(unsigned char key, int x, int y)
