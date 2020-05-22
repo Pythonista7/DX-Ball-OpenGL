@@ -45,7 +45,7 @@ int random_number_in_range(int start,int end)
 
 //indicating change in x and y directions
 //Dictates ball speed
-float delta_x_= 10+random_number_in_range(0,5),delta_y_= 15+random_number_in_range(0,5);
+float delta_x_= 0.25+0.01*random_number_in_range(1,3),delta_y_= 0.25+0.01*random_number_in_range(1,3);
 
 
 bool initGL()
@@ -75,12 +75,23 @@ bool initGL()
     return true;
 }
 
-void update()
+void DrawWalls()
 {
-
+    //SCREEN BORDERS
+    glBegin(GL_LINE_STRIP);
+    glColor3f(0,1,1);
+    glLineWidth(5.0f);
+    
+    glVertex2f( -(SCREEN_WIDTH-50.f) ,  SCREEN_HEIGHT-50.f );
+    glVertex2f( -(SCREEN_WIDTH-50) , -(SCREEN_HEIGHT-50) );
+    glVertex2f(  SCREEN_WIDTH-50.f , -(SCREEN_HEIGHT-50.f) );
+    glVertex2f(  SCREEN_WIDTH-50.f ,  SCREEN_HEIGHT-50.f );
+        
+    glEnd();
 }
 
-void DrawCircle(float cx, float cy, float r, int num_segments) {
+void DrawCircle(float cx, float cy, float r, int num_segments) 
+{
     glColor3f(0,1,0);
     glClear(GL_COLOR_BUFFER_BIT);
     glBegin(GL_POLYGON);
@@ -91,44 +102,13 @@ void DrawCircle(float cx, float cy, float r, int num_segments) {
         glVertex2f(x + cx, y + cy);//output vertex 
     }
     glEnd();
+    
 }
 
-void render()
+
+void DrawPaddle()
 {
-    //Clear color buffer and set it to the color specified in glClearColor() in initGL()
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    //Reset Model View Matrix
-    //projection matrix controls how the geometry is viewed
-    //modelview matrix tranformations control how geometry is placed in the rendering world.
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    
-   
-
-    //Render Quad
-    
-        //SCREEN BORDERS
-        glBegin(GL_LINE_STRIP);
-            glColor3f(0,1,1);
-            glLineWidth(5.0f);
-            
-            glVertex2f( -(SCREEN_WIDTH-50.f) ,  SCREEN_HEIGHT-50.f );
-            glVertex2f( -(SCREEN_WIDTH-50) , -(SCREEN_HEIGHT-50) );
-            glVertex2f(  SCREEN_WIDTH-50.f , -(SCREEN_HEIGHT-50.f) );
-            glVertex2f(  SCREEN_WIDTH-50.f ,  SCREEN_HEIGHT-50.f );
-            
-            
-        glEnd();
-        glutSwapBuffers();
-
-
-        //Game Physics - Bricks
-
-
-
-        //Moveable Paddle
-        
+    //Paddle
         glBegin(GL_POLYGON);
 
             glColor3f(1,0,1);
@@ -149,102 +129,107 @@ void render()
 
     
         glEnd();
-        glutSwapBuffers();
-
-
        
+}
 
-        
-        //Game Physics - Ball
-
-        //speeding up the ball
-       
-        DrawCircle(x,y,BALL_RADII,8);
-        //Adding randomness to the ball movement speed
-        
-        x=x+float(delta_x_ * h) ;
-        y=y+float(delta_y_ * v) ;
-
-        
-
-      
-            int i=0;
-            
-            //BOUNDRY CONDITIONS
-            //CHECK RIGHT WALL IMPACT 
-            if(x>=right_wall && flag_left==-1)
-            {
-                flag_left=1;
-                h=-1;
-             
-            }
-            //CHECK LEFT WALL IMPACT
-            if(x<=left_wall && flag_left==1) 
-            {
-                flag_left=-1;
-                h=1;
-                
-            }
-
-            //CHECK TOP WALL IMPACT
-            if(y<=-(SCREEN_HEIGHT-50) && flag_down==-1)//0
-            {
-                flag_down=1;
-                v=1;
-               
-            }
-
-
-            //CHECK BOTTOME PADDLE IMPACT
-            if( (x > paddle_left && x < paddle_right) && y>=SCREEN_HEIGHT-50-PADDLE_HEIGHT && flag_down==1 )
-            {   
-                // printf("%d",random_number_in_range(0,3));
-                delta_y_+=random_number_in_range(0,3);
-                delta_x_+=random_number_in_range(0,3);
-                //printf("delta_y=%d \t",delta_y_);
-                //printf("delta_x=%d \t HIT\n",delta_x_);
-                score++;
-                flag_down=-1;
-                v=-1;
-            }
-
-            //Mainly for debugging
-            //printf("flag_down = %d\n",flag_down);
-            //if(y>SCREEN_HEIGHT-200)
-            //{
-            //    printf("%d  \t %d  \t %d\n",(x > paddle_left && x < paddle_right),y==SCREEN_HEIGHT-50-PADDLE_HEIGHT,flag_down==1 );
-            //    printf("y = %d \t paddle_y= %d \n",y,SCREEN_HEIGHT-50-PADDLE_HEIGHT);
-            //}
-            //PADDLE IMPACT CHECK
-            //x < paddle_left && x > paddle_right &&
-
-            if( y>SCREEN_HEIGHT)//condition when ball wont be within the reach of the paddle
-            {
-               //printf("x=%d  \t  paddle_left=%d \t paddle_right=%d\n",x,paddle_left,paddle_right);
-               printf("GAME OVER\n");
-               printf("SCORE : %d\n",score);
-               exit(0);
-            }
-
-            
- 
-        
-
-
-    glutSwapBuffers(); //same as glflush() in single buffer mode
+void update()
+{ 
 
 }
 
-void runMainLoop(int val)
+
+
+void render()
 {
-  
-    //Frame Logic
-    update();
-    render();
+    //Clear color buffer and set it to the color specified in glClearColor() in initGL()
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    //Reset Model View Matrix
+    //projection matrix controls how the geometry is viewed
+    //modelview matrix tranformations control how geometry is placed in the rendering world.
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
     
-    //Run frame one more time
-    glutTimerFunc(10,runMainLoop,val);//1000/SCREEN_FPS ,runMainLoop , val );
+    //drawing all game objects
+    DrawCircle(x,y,BALL_RADII,8);
+    DrawWalls();
+    DrawPaddle();
+
+    glutPostRedisplay();
+
+
+    //Adding randomness to the ball movement speed
+    
+    x=x+float(delta_x_ * h) ;
+    y=y+float(delta_y_ * v) ;
+
+        int i=0;
+        
+        //BOUNDRY CONDITIONS
+        //CHECK RIGHT WALL IMPACT 
+        if(x>=right_wall && flag_left==-1)
+        {
+            flag_left=1;
+            h=-1;
+            
+        }
+        //CHECK LEFT WALL IMPACT
+        if(x<=left_wall && flag_left==1) 
+        {
+            flag_left=-1;
+            h=1;
+            
+        }
+
+        //CHECK TOP WALL IMPACT
+        if(y<=-(SCREEN_HEIGHT-50) && flag_down==-1)//0
+        {
+            flag_down=1;
+            v=1;
+            
+        }
+
+
+        //CHECK BOTTOME PADDLE IMPACT
+        if( (x > paddle_left && x < paddle_right) && y>=SCREEN_HEIGHT-50-PADDLE_HEIGHT && flag_down==1 )
+        {   
+            // printf("%d",random_number_in_range(0,3));
+            if(score%3==0)
+            {
+                delta_y_+=0.025*random_number_in_range(0,3);
+                delta_x_+=0.025*random_number_in_range(0,3);
+            }
+            //printf("delta_y=%d \t",delta_y_);
+            //printf("delta_x=%d \t HIT\n",delta_x_);
+            score++;
+            flag_down=-1;
+            v=-1;
+        }
+
+        //Mainly for debugging
+        //printf("flag_down = %d\n",flag_down);
+        //if(y>SCREEN_HEIGHT-200)
+        //{
+        //    printf("%d  \t %d  \t %d\n",(x > paddle_left && x < paddle_right),y==SCREEN_HEIGHT-50-PADDLE_HEIGHT,flag_down==1 );
+        //    printf("y = %d \t paddle_y= %d \n",y,SCREEN_HEIGHT-50-PADDLE_HEIGHT);
+        //}
+        //PADDLE IMPACT CHECK
+        //x < paddle_left && x > paddle_right &&
+
+        if( y>SCREEN_HEIGHT)//condition when ball wont be within the reach of the paddle
+        {
+            //printf("x=%d  \t  paddle_left=%d \t paddle_right=%d\n",x,paddle_left,paddle_right);
+            printf("GAME OVER\n");
+            printf("SCORE : %d\n",score);
+            exit(0);
+        }
+
+        glFlush();
+        
+    
 }
+
+
 
 void handleKeys(unsigned char key,int x ,int y)
 {
@@ -283,4 +268,16 @@ void handleKeys(unsigned char key,int x ,int y)
 
 
 
+}
+
+
+void runMainLoop(int val)
+{
+  
+    //Frame Logic
+    render();
+    update();
+    
+    //Run frame one more time
+    glutTimerFunc(25,runMainLoop,val);//1000/SCREEN_FPS ,runMainLoop , val );
 }

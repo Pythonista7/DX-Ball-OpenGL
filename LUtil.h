@@ -1,5 +1,7 @@
 #include "LOpenGL.h"
 
+//Useful reference link
+//http://cse.csusb.edu/tongyu/courses/cs420/notes/drawing.php
 
 const int SCREEN_WIDTH =640;
 const int SCREEN_HEIGHT =480;
@@ -21,7 +23,7 @@ const int COLOR_MODE_CYAN = 0;
 const int COLOR_MODE_MULTI =1;
 
 
-bool initGL();
+bool initGL();  
 /*
 Pre Condition:
  -A valid OpenGL context

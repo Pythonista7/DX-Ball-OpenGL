@@ -15,9 +15,7 @@ int main( int argc , char* args[] )
     //Initialize FreeGLUT
     glutInit(&argc,args);
 
-    //Create OpenGL 2.1 context <OPTIONAL> {comment out if error pops up}
-    glutInitContextVersion( 2, 1 );
-
+    
     /* 
     In this application, we're going to use a double buffered window.
     What this means is that we have two buffers, a front and back buffer. 
@@ -26,11 +24,11 @@ int main( int argc , char* args[] )
     After we're done rendering what we want to show to the user,we swap the front buffer with 
     the back buffer so the user sees what we originally rendered to the back buffer.
     Now in a single buffered window, everything is draw directly to the front buffer.
-    This means the user will see geometry as it's being rendered, which means they may see unfinished 
+    This means the user will see geometry as it's being rendered, which means we may see unfinished 
     rendering and tearing.
-    From main.cpp
     */
-    glutInitDisplayMode( GLUT_DOUBLE );
+
+    glutInitDisplayMode( GLUT_SINGLE );
 
     glutInitWindowSize(SCREEN_WIDTH,SCREEN_HEIGHT);
     glutCreateWindow("Ashwin.M.S");
@@ -48,8 +46,13 @@ int main( int argc , char* args[] )
     //Set rendering function
     glutDisplayFunc(render);
 
+    //Setting up Idle func to update
+    
+
     //Set main loop
-    glutTimerFunc(1000/SCREEN_FPS,runMainLoop,0);
+    runMainLoop(0);
+
+    //glutTimerFunc(5,runMainLoop,0);
 
     //Start GLUT main loop
     glutMainLoop();//This runs freeGLUT's internal main loop not our main loop
