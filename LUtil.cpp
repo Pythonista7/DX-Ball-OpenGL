@@ -20,12 +20,12 @@ void build_array()
     for (int j = 1; j < 6; j++)
     {
         arrayX[0][j] = yCoordinateLocal;
-        yCoordinateLocal -= 50;
+        yCoordinateLocal -= yBrickHeight;
     }
     for (int i = 1; i < 11; i++)
     {
         arrayX[i][0] = xCoordinateLocal;
-        xCoordinateLocal += 118;
+        xCoordinateLocal += xBrickLength;
     }
     arrayX[0][0] = 0;
 }
@@ -194,7 +194,7 @@ void DrawBricks()
             if (arrayX[i][j] != 0)
             {
 
-                glRectd(arrayX[i][0], arrayX[0][j] - 49, arrayX[i][0] + 117, arrayX[0][j]);
+                glRectd(arrayX[i][0], arrayX[0][j] - (yBrickHeight - 1), arrayX[i][0] + (xBrickLength - 1), arrayX[0][j]); //-1 both places to show borders
 
                 // glBegin(GL_QUADS);
 

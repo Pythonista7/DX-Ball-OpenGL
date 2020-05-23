@@ -3,32 +3,33 @@
 //Useful reference link
 //http://cse.csusb.edu/tongyu/courses/cs420/notes/drawing.php
 
-const int SCREEN_WIDTH =640;
-const int SCREEN_HEIGHT =480;
-const int SCREEN_FPS =200;
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
+const int SCREEN_FPS = 200;
 
+//starting values for (bottom left) for the bricks
+const int yCoordinateGlobal = -180;                        //hardcoded, since the axis will stay in the middle for every screen it will too
+const int xCoordinateGlobal = -(SCREEN_WIDTH - 50);        //-590; -50 considering the walls too
+const int xBrickLength = (SCREEN_WIDTH - 50) * 2 / 10;     //10 is the noble of bricks from left to right
+const int yBrickHeight = ((SCREEN_HEIGHT - 50) - 180) / 5; //-50 for accounting the wall; -180 for bottom most brick height; 5 because no. of bricks will be 5 from bottom to up.
 
-//
-const int yCoordinateGlobal = -180;
-const int xCoordinateGlobal = -590;
-
-//Step size 
-const float STEP_SIZE=(SCREEN_WIDTH-50)/5;
+//Step size
+const float STEP_SIZE = (SCREEN_WIDTH - 50) / 5;
 
 //Ball radii
-const float BALL_RADII=15;
+const float BALL_RADII = 15;
 
 //paddle size
-const int PADDLE_WIDTH=SCREEN_WIDTH/5;
-const int PADDLE_HEIGHT=30;
+const int PADDLE_WIDTH = SCREEN_WIDTH / 5;
+const int PADDLE_HEIGHT = 30;
 
 //color modes
 const int COLOR_MODE_CYAN = 0;
-const int COLOR_MODE_MULTI =1;
+const int COLOR_MODE_MULTI = 1;
 
 //bricks array
 
-bool initGL();  
+bool initGL();
 /*
 Pre Condition:
  -A valid OpenGL context
@@ -65,7 +66,7 @@ Side Effects:
  -Swaps the front/back buffer
 */
 
-void handleKeys( unsigned char key, int x, int y );
+void handleKeys(unsigned char key, int x, int y);
 /*
 Pre Condition:
  -None
@@ -76,8 +77,7 @@ Side Effects:
  -If the user presses e, the matrix mode is set to projection
 */
 
-
-int random_number_in_range(int start,int end) ;
+int random_number_in_range(int start, int end);
 /*
 Utility Function to generate random numbers in a range
 */
