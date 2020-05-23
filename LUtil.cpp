@@ -190,6 +190,7 @@ void update()
         v = 1;
     }
 
+
     //CHECK BOTTOME PADDLE IMPACT
     if ((x > paddle_left && x < paddle_right) && y >= SCREEN_HEIGHT - 50 - PADDLE_HEIGHT && flag_down == 1)
     {
