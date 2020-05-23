@@ -46,8 +46,8 @@ int main( int argc , char* args[] )
     //Set rendering function
     glutDisplayFunc(render);
 
-    //Setting up Idle func to update
-    
+    //Setting up redisplay
+    //glutReshapeFunc(myReshape);
 
     //Set main loop
     runMainLoop(0);

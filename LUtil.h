@@ -23,6 +23,9 @@ const int COLOR_MODE_CYAN = 0;
 const int COLOR_MODE_MULTI =1;
 
 
+
+
+
 bool initGL();  
 /*
 Pre Condition:
@@ -36,6 +39,12 @@ Side Effects:
  -Modelview matrix is set to identity matrix
  -Matrix mode is set to modelview
  -Clear color is set to black
+*/
+
+
+void myReshape(int w, int h);
+/*
+Used to maintain aspect ratio even after the screen size has been changed. 
 */
 
 void update();
@@ -75,4 +84,19 @@ Side Effects:
 int random_number_in_range(int start,int end) ;
 /*
 Utility Function to generate random numbers in a range
+*/
+
+void DrawWalls();
+/*
+Used to render the boundry walls 
+*/
+
+void DrawCircle(float cx, float cy, float r, int num_segments);
+/*
+Used to render the ball 
+*/
+
+void DrawPaddle();
+/*
+Used to render the paddle
 */

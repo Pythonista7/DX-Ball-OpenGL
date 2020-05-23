@@ -27,10 +27,20 @@ int factor=0,paddle_left=0,paddle_right=0;
 
 //x and y for ball center
 float x=50,y=SCREEN_HEIGHT-50-PADDLE_HEIGHT ;
+
 //h and v are factors to hold +ve/-ve signs for movement directions
 int h=1,v=-1;
 //to chk if ball is movin up/down or right/left
 int flag_down=-1,flag_left=-1; // (h/v)*cor-ord value much give appropriate dir wrt the x/y axes
+
+
+//Brick config
+const float brick_width = 0.07*SCREEN_HEIGHT, brick_length = 0.2*(SCREEN_WIDTH-50);
+const int tot_rows=5,tot_cols=(2*(SCREEN_WIDTH-50))/brick_length;
+
+int bricks_render[tot_rows][tot_cols]={0};
+
+
 
 //util function to generate random number in a given range
 int random_number_in_range(int start,int end) 
@@ -45,7 +55,7 @@ int random_number_in_range(int start,int end)
 
 //indicating change in x and y directions
 //Dictates ball speed
-float delta_x_= 0.25+0.01*random_number_in_range(1,3),delta_y_= 0.25+0.01*random_number_in_range(1,3);
+float delta_x_= SCREEN_WIDTH*0.0005 + 0.01*random_number_in_range(-2,3),delta_y_= SCREEN_HEIGHT*0.0005 + 0.01*random_number_in_range(1,3);
 
 
 bool initGL()
@@ -73,6 +83,18 @@ bool initGL()
     }
 
     return true;
+}
+
+
+
+void myReshape(int w, int h)
+{
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    if(w<=h) 
+    glFrustum(0,SCREEN_WIDTH ,SCREEN_HEIGHT ,0  , 2.0 , 50.0);
+        
 }
 
 void DrawWalls()
@@ -133,12 +155,117 @@ void DrawPaddle()
 }
 
 
+
+int check_collision()
+{
+     for(int r=0;r<tot_rows;r++)
+     {
+         for(int c=0;c<tot_cols;c++)
+         {
+              
+          
+             
+         }
+     }
+    
+}
+
 void DrawBricks()
 {
     //logic to render bricks here , add logic to update bricks below the function call in update()
+    
+    
+    
+    //glRectd(left_wall,0,left_wall+brick_length,brick_width);
+    //glColor3f(random_number_in_range(1,5)*0.1,random_number_in_range(1,5)*0.1,random_number_in_range(1,5)*0.1);
+    glColor3f(1,0.5,0.25);
 
+
+    glTranslated(left_wall,-SCREEN_HEIGHT+50,0);
+
+
+     for(int row=0;row<tot_rows;row++)
+     {
+         
+         glPushMatrix();
+         glTranslated(SCREEN_WIDTH-50,brick_width*row,0);
+         for(int col=0;col<tot_cols;col++)
+         {
+             glPushMatrix();
+             glTranslated(left_wall+brick_length*col,0,0);
+             
+            //  printf("1) %d\n",bricks_render[row][col]==0);
+            //  printf("2) %d\n",x == (left_wall+ (brick_length*col) +brick_length)); 
+            //  printf("\t\t%d  <= %d\n",x,(left_wall+ (brick_length*col) +brick_length) );
+            //  printf("3) %d\n",x > (left_wall+(brick_length*col)));
+            //  printf("4) %d\n",y > brick_width*row );
+            //  printf("5) %d\n",y<=brick_width*row+brick_width);
+
+             if( bricks_render[row][col]==0
+            //    bricks_render[row][col]==0 &&  y > brick_width*row && y<=brick_width*row+brick_width 
+            //    && x <= (left_wall+ (brick_length*col) +brick_length) && x > (left_wall+(brick_length*col)) 
+     
+             )
+             {
+                 //printf("YES %d\n",random_number_in_range(2,5));
+                 glRectd(0,0,brick_length,brick_width);
+                 //bricks_render[row][col]=1;
+                 
+             }
+           
+             
+             glPopMatrix();
+         }
+         glPopMatrix();
+  
+     }
+     
 }
 
+void updateBricks()
+{
+ glColor3f(1,0.5,0.25);
+
+
+    glTranslated(left_wall,-SCREEN_HEIGHT+50,0);
+
+
+     for(int row=0;row<tot_rows;row++)
+     {
+         if(y>SCREEN_HEIGHT-(brick_width*tot_rows))
+            break;
+         glPushMatrix();
+         glTranslated(SCREEN_WIDTH-50,brick_width*row,0);
+         
+         for(int col=0;col<tot_cols;col++)
+         {
+             glPushMatrix();
+             glTranslated(left_wall+brick_length*col,0,0);
+             
+            //  printf("1) %d\n",bricks_render[row][col]==0);
+            //  printf("2) %d\n",x == (left_wall+ (brick_length*col) +brick_length)); 
+            //  printf("\t\t%d  <= %d\n",x,(left_wall+ (brick_length*col) +brick_length) );
+            //  printf("3) %d\n",x > (left_wall+(brick_length*col)));
+            //  printf("4) %d\n",y > brick_width*row );
+            //  printf("5) %d\n",y<=brick_width*row+brick_width);
+             
+             if(bricks_render[row][col]==0 &&  y > brick_width*row && y<=brick_width*row+brick_width 
+                && x <= (left_wall+ (brick_length*col) +brick_length) && x > (left_wall+(brick_length*col)) 
+     
+             )
+             {
+                    bricks_render[row][col]=1;
+                 
+             }
+           
+             
+             glPopMatrix();
+         }
+         glPopMatrix();
+  
+     }
+     
+}
 
 void update()
 { 
@@ -146,10 +273,9 @@ void update()
     DrawCircle(x,y,BALL_RADII,8);
     DrawWalls();
     DrawPaddle();
-    DrawBricks();
+    
 
-    glutPostRedisplay();
-
+    
     //Adding randomness to the ball movement speed
     
     x=x+float(delta_x_ * h) ;
@@ -182,17 +308,17 @@ void update()
         }
 
 
-        //CHECK BOTTOME PADDLE IMPACT
+        //CHECK BOTTOM PADDLE IMPACT
         if( (x > paddle_left && x < paddle_right) && y>=SCREEN_HEIGHT-50-PADDLE_HEIGHT && flag_down==1 )
         {   
             // printf("%d",random_number_in_range(0,3));
-            if(score%3==0)
+            if(score%2==0)
             {
-                delta_y_+=0.025*random_number_in_range(0,3);
-                delta_x_+=0.025*random_number_in_range(0,3);
+                delta_y_+=0.005*random_number_in_range(1,3);
+                delta_x_+=0.005*random_number_in_range(-2,2);
             }
-            //printf("delta_y=%d \t",delta_y_);
-            //printf("delta_x=%d \t HIT\n",delta_x_);
+            // printf("delta_y=%d \t",delta_y_);
+            // printf("delta_x=%d \t HIT\n",delta_x_);
             score++;
             flag_down=-1;
             v=-1;
@@ -208,6 +334,7 @@ void update()
         //PADDLE IMPACT CHECK
         //x < paddle_left && x > paddle_right &&
 
+
         if( y>SCREEN_HEIGHT)//condition when ball wont be within the reach of the paddle
         {
             //printf("x=%d  \t  paddle_left=%d \t paddle_right=%d\n",x,paddle_left,paddle_right);
@@ -215,8 +342,20 @@ void update()
             printf("SCORE : %d\n",score);
             exit(0);
         }
+
+        //check_collision();
+        
+        DrawBricks();
+    
+        glutPostRedisplay();
 }
 
+
+void myidle()
+{
+    update();
+    updateBricks();
+}
 
 
 void render()
@@ -230,10 +369,12 @@ void render()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
+    //printf("x=%f y= %f\n",x,y );
     //drawing all game objects
     DrawCircle(x,y,BALL_RADII,8);
     DrawWalls();
     DrawPaddle();
+    DrawBricks();
 
     glFlush();
         
@@ -275,10 +416,6 @@ void handleKeys(unsigned char key,int x ,int y)
 
     }
 
-
-
-
-
 }
 
 
@@ -288,7 +425,7 @@ void runMainLoop(int val)
     //Frame Logic
     render();
     update();
-    glutIdleFunc(update);
+    glutIdleFunc(myidle);
 
     //Run frame one more time
     //glutTimerFunc(25,runMainLoop,val);//1000/SCREEN_FPS ,runMainLoop , val );
