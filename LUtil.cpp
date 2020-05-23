@@ -5,8 +5,31 @@
 //SCORE 1 point everytime you hit
 int score = 0;
 
-int arrayX[] = {-590,-472,-354,-236,-118,0,118,236,354,472};
-int arrayY[] = {-180,-230,-280,-330,-380};
+int arrayX[11][6]; // {-590, -472, -354, -236, -118, 0, 118, 236, 354, 472, 999};
+void build_array()
+{
+    int yCoordinateLocal = yCoordinateGlobal;
+    int xCoordinateLocal = xCoordinateGlobal;
+    for (int i = 0; i < 11; i++)
+    {
+        for (int j = 0; j < 6; j++)
+        {
+            arrayX[i][j] = 1;
+        }
+    }
+    for (int j = 1; j < 6; j++)
+    {
+        arrayX[0][j] = yCoordinateLocal;
+        yCoordinateLocal -= 50;
+    }
+    for (int i = 1; i < 11; i++)
+    {
+        arrayX[i][0] = xCoordinateLocal;
+        xCoordinateLocal += 118;
+    }
+    arrayX[0][0] = 0;
+}
+//int arrayY[] = {-180, -230, -280, -330, -380, 999};
 
 //"gColorMode" controls whether we render a solid cyan square or a multicolored square.
 int gColorMode = COLOR_MODE_MULTI;
@@ -44,7 +67,9 @@ int random_number_in_range(int start, int end)
 
 //indicating change in x and y directions
 //Dictates ball speed
-float delta_x_ = 0.25 + 0.01 * random_number_in_range(1, 3), delta_y_ = 0.25 + 0.01 * random_number_in_range(1, 3);
+//float delta_y_ = 0.025 * random_number_in_range(0, 3);
+//float delta_x_ = 0.025 * random_number_in_range(0, 3);
+float delta_x_ = 0.25 + 0.01 * random_number_in_range(1, 3), delta_y_ = 0.1 + 0.01 * random_number_in_range(1, 3);
 
 bool initGL()
 {
@@ -126,27 +151,59 @@ void DrawPaddle()
     glEnd();
 }
 
+void collisionDetection()
+{
+    if (y < -180)
+    {
+        for (int i = 1; i < 11; i++)
+        {
+            for (int j = 1; j < 6; j++)
+                if (y > arrayX[0][j + 1] && y < arrayX[0][j] && x < arrayX[i + 1][0] && x > arrayX[i][0])
+                {
+                    if (arrayX[i][j] != 0)
+                        score++;
+                    arrayX[i][j] = 0;
+                    //reflect_ball_logic
+                    // v = -1;
+                    // DrawBricks();
+                    // glutPostRedisplay();
+                    //re-render screen
+                    for (int i = 0; i < 11; i++)
+                    {
+                        for (int j = 0; j < 6; j++)
+                        {
+                            printf("%d\t", arrayX[i][j]);
+                        }
+                        printf("\n");
+                    }
+                }
+        }
+    }
+}
+
 void DrawBricks()
 {
     //logic to render bricks here , add logic to update bricks below the function call in update()
 
-    for (int j = 0; j < 5; j++)
+    glColor3f(0.4, 0.9, 0.5);
+    glLineWidth(5.0f);
+    for (int i = 1; i < 11; i++)
     {
-        for (int i = 0; i < 10; i++)
+        for (int j = 1; j < 6; j++)
         {
-            if (arrayX[i] != 999)
+            if (arrayX[i][j] != 0)
             {
-                glBegin(GL_POLYGON);
-                glColor3f(0.4, 0.9, 0.5);
-                glLineWidth(5.0f);
 
-                glVertex2f(arrayX[i], arrayY[j]);
-                glVertex2f(arrayX[i] + 117, arrayY[j]);
-                glVertex2f(arrayX[i] + 117, arrayY[j] - 49);
-                glVertex2f(arrayX[i], arrayY[j] - 49);
+                glRectd(arrayX[i][0], arrayX[0][j] - 49, arrayX[i][0] + 117, arrayX[0][j]);
 
-                glEnd();
-                glFlush();
+                // glBegin(GL_QUADS);
+
+                // glVertex2f(arrayX[i][0], arrayX[0][j]);
+                // glVertex2f(arrayX[i][0] + 117, arrayX[0][j]);
+                // glVertex2f(arrayX[i][0] + 117, arrayX[0][j] - 49);
+                // glVertex2f(arrayX[i][0], arrayX[0][j] - 49);
+
+                // glEnd();
             }
         }
     }
@@ -158,9 +215,6 @@ void update()
     DrawCircle(x, y, BALL_RADII, 8);
     DrawWalls();
     DrawPaddle();
-    DrawBricks();
-
-    glutPostRedisplay();
 
     //Adding randomness to the ball movement speed
 
@@ -190,7 +244,6 @@ void update()
         v = 1;
     }
 
-
     //CHECK BOTTOME PADDLE IMPACT
     if ((x > paddle_left && x < paddle_right) && y >= SCREEN_HEIGHT - 50 - PADDLE_HEIGHT && flag_down == 1)
     {
@@ -217,6 +270,12 @@ void update()
     //PADDLE IMPACT CHECK
     //x < paddle_left && x > paddle_right &&
 
+    collisionDetection();
+
+    DrawBricks();
+
+    glutPostRedisplay();
+
     if (y > SCREEN_HEIGHT) //condition when ball wont be within the reach of the paddle
     {
         //printf("x=%d  \t  paddle_left=%d \t paddle_right=%d\n",x,paddle_left,paddle_right);
@@ -241,7 +300,7 @@ void render()
     DrawCircle(x, y, BALL_RADII, 8);
     DrawWalls();
     DrawPaddle();
-
+    DrawBricks();
     glFlush();
 }
 
@@ -282,6 +341,11 @@ void runMainLoop(int val)
 {
 
     //Frame Logic
+    if (val == 0)
+    {
+        build_array();
+        val = 1;
+    }
     render();
     update();
     glutIdleFunc(update);

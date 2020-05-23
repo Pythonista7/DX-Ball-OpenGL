@@ -8,6 +8,10 @@ const int SCREEN_HEIGHT =480;
 const int SCREEN_FPS =200;
 
 
+//
+const int yCoordinateGlobal = -180;
+const int xCoordinateGlobal = -590;
+
 //Step size 
 const float STEP_SIZE=(SCREEN_WIDTH-50)/5;
 
@@ -76,4 +80,15 @@ Side Effects:
 int random_number_in_range(int start,int end) ;
 /*
 Utility Function to generate random numbers in a range
+*/
+
+void collisionDetection();
+/*
+fuction to detecte collsion of the ball with bricks
+used in LUtil.cpp
+*/
+
+void DrawBricks();
+/*
+function used to draw bricks
 */
