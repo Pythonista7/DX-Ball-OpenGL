@@ -132,32 +132,23 @@ void DrawPaddle()
        
 }
 
-void update()
-{ 
-    //Testing
+
+void DrawBricks()
+{
+    //logic to render bricks here , add logic to update bricks below the function call in update()
 
 }
 
 
-
-void render()
-{
-    //Clear color buffer and set it to the color specified in glClearColor() in initGL()
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    //Reset Model View Matrix
-    //projection matrix controls how the geometry is viewed
-    //modelview matrix tranformations control how geometry is placed in the rendering world.
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    
-    //drawing all game objects
+void update()
+{ 
+    //Testing
     DrawCircle(x,y,BALL_RADII,8);
     DrawWalls();
     DrawPaddle();
+    DrawBricks();
 
     glutPostRedisplay();
-
 
     //Adding randomness to the ball movement speed
     
@@ -224,8 +215,27 @@ void render()
             printf("SCORE : %d\n",score);
             exit(0);
         }
+}
 
-        glFlush();
+
+
+void render()
+{
+    //Clear color buffer and set it to the color specified in glClearColor() in initGL()
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    //Reset Model View Matrix
+    //projection matrix controls how the geometry is viewed
+    //modelview matrix tranformations control how geometry is placed in the rendering world.
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    
+    //drawing all game objects
+    DrawCircle(x,y,BALL_RADII,8);
+    DrawWalls();
+    DrawPaddle();
+
+    glFlush();
         
     
 }
@@ -278,7 +288,8 @@ void runMainLoop(int val)
     //Frame Logic
     render();
     update();
-    
+    glutIdleFunc(update);
+
     //Run frame one more time
-    glutTimerFunc(25,runMainLoop,val);//1000/SCREEN_FPS ,runMainLoop , val );
+    //glutTimerFunc(25,runMainLoop,val);//1000/SCREEN_FPS ,runMainLoop , val );
 }
