@@ -22,6 +22,7 @@ const int PADDLE_HEIGHT=30;
 const int COLOR_MODE_CYAN = 0;
 const int COLOR_MODE_MULTI =1;
 
+//bricks array
 
 bool initGL();  
 /*
