@@ -5,24 +5,24 @@
 //SCORE 1 point everytime you hit
 int score = 0;
 
-int arrayX[11][6]; // {-590, -472, -354, -236, -118, 0, 118, 236, 354, 472, 999};
+int arrayX[12][7]; // {-590, -472, -354, -236, -118, 0, 118, 236, 354, 472, 999};
 void build_array()
 {
     int yCoordinateLocal = yCoordinateGlobal;
     int xCoordinateLocal = xCoordinateGlobal;
-    for (int i = 0; i < 11; i++)
+    for (int i = 0; i < 12; i++)
     {
-        for (int j = 0; j < 6; j++)
+        for (int j = 0; j < 7; j++)
         {
             arrayX[i][j] = 1;
         }
     }
-    for (int j = 1; j < 6; j++)
+    for (int j = 1; j < 7; j++)
     {
         arrayX[0][j] = yCoordinateLocal;
         yCoordinateLocal -= yBrickHeight;
     }
-    for (int i = 1; i < 11; i++)
+    for (int i = 1; i < 12; i++)
     {
         arrayX[i][0] = xCoordinateLocal;
         xCoordinateLocal += xBrickLength;
@@ -69,7 +69,7 @@ int random_number_in_range(int start, int end)
 //Dictates ball speed
 //float delta_y_ = 0.025 * random_number_in_range(0, 3);
 //float delta_x_ = 0.025 * random_number_in_range(0, 3);
-float delta_x_ = 0.25 + 0.01 * random_number_in_range(1, 3), delta_y_ = 0.1 + 0.01 * random_number_in_range(1, 3);
+float delta_x_ = 0.05 + 0.01 * random_number_in_range(1, 3), delta_y_ = 0.1 + 0.01 * random_number_in_range(1, 3);
 
 bool initGL()
 {
