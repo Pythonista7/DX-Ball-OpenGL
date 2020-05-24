@@ -161,23 +161,65 @@ void collisionDetection()
                 if (y > arrayX[0][j + 1] && y < arrayX[0][j] && x < arrayX[i + 1][0] && x > arrayX[i][0])
                 {
                     if (arrayX[i][j] != 0)
+                    {
                         score++;
+                        v = -1 * v;
+                        flag_down = -1*flag_down;
+                        //flag_left = -1*random_number_in_range(0,1)*flag_left;
+                    }
                     arrayX[i][j] = 0;
                     //reflect_ball_logic
                     // v = -1;
                     // DrawBricks();
                     // glutPostRedisplay();
                     //re-render screen
-                    for (int i = 0; i < 11; i++)
-                    {
-                        for (int j = 0; j < 6; j++)
-                        {
-                            printf("%d\t", arrayX[i][j]);
-                        }
-                        printf("\n");
-                    }
+                    // for (int i = 0; i < 11; i++)
+                    // {
+                    //     for (int j = 0; j < 6; j++)
+                    //     {
+                    //         printf("%d\t", arrayX[i][j]);
+                    //     }
+                    //     printf("\n");
+                    // }
                 }
         }
+    }
+
+    //BOUNDRY CONDITIONS
+    //CHECK RIGHT WALL IMPACT
+    if (x >= right_wall && flag_left == -1)
+    {
+        flag_left = 1;
+        h = -1;
+    }
+    //CHECK LEFT WALL IMPACT
+    if (x <= left_wall && flag_left == 1)
+    {
+        flag_left = -1;
+        h = 1;
+    }
+
+    //CHECK TOP WALL IMPACT
+    if (y <= -(SCREEN_HEIGHT - 50) && flag_down == -1) //0
+    {
+        flag_down = 1;
+        v = 1;
+    }
+
+    //CHECK BOTTOME PADDLE IMPACT
+    if ((x > paddle_left && x < paddle_right) && y >= SCREEN_HEIGHT - 50 - PADDLE_HEIGHT && flag_down == 1)
+    {
+        // printf("%d",random_number_in_range(0,3));
+        if (score % 3 == 0)
+        {
+            delta_y_ += 0.025 * random_number_in_range(0, 3);
+            delta_x_ += 0.025 * random_number_in_range(0, 3);
+        }
+        //printf("delta_y=%d \t",delta_y_);
+        //printf("delta_x=%d \t HIT\n",delta_x_);
+        score++;
+        flag_down = -1;
+        v = -1;
     }
 }
 
@@ -222,43 +264,6 @@ void update()
     y = y + float(delta_y_ * v);
 
     int i = 0;
-
-    //BOUNDRY CONDITIONS
-    //CHECK RIGHT WALL IMPACT
-    if (x >= right_wall && flag_left == -1)
-    {
-        flag_left = 1;
-        h = -1;
-    }
-    //CHECK LEFT WALL IMPACT
-    if (x <= left_wall && flag_left == 1)
-    {
-        flag_left = -1;
-        h = 1;
-    }
-
-    //CHECK TOP WALL IMPACT
-    if (y <= -(SCREEN_HEIGHT - 50) && flag_down == -1) //0
-    {
-        flag_down = 1;
-        v = 1;
-    }
-
-    //CHECK BOTTOME PADDLE IMPACT
-    if ((x > paddle_left && x < paddle_right) && y >= SCREEN_HEIGHT - 50 - PADDLE_HEIGHT && flag_down == 1)
-    {
-        // printf("%d",random_number_in_range(0,3));
-        if (score % 3 == 0)
-        {
-            delta_y_ += 0.025 * random_number_in_range(0, 3);
-            delta_x_ += 0.025 * random_number_in_range(0, 3);
-        }
-        //printf("delta_y=%d \t",delta_y_);
-        //printf("delta_x=%d \t HIT\n",delta_x_);
-        score++;
-        flag_down = -1;
-        v = -1;
-    }
 
     //Mainly for debugging
     //printf("flag_down = %d\n",flag_down);
