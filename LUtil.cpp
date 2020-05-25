@@ -69,7 +69,7 @@ int random_number_in_range(int start, int end)
 //Dictates ball speed
 //float delta_y_ = 0.025 * random_number_in_range(0, 3);
 //float delta_x_ = 0.025 * random_number_in_range(0, 3);
-float delta_x_ = 0.05 + 0.01 * random_number_in_range(1, 3), delta_y_ = 0.1 + 0.01 * random_number_in_range(1, 3);
+float delta_x_ = 0.7 + 0.01 * random_number_in_range(1, 3), delta_y_ = 0.5 + 0.01 * random_number_in_range(1, 3);
 
 bool initGL()
 {
@@ -164,7 +164,7 @@ void collisionDetection()
                     {
                         score++;
                         v = -1 * v;
-                        flag_down = -1*flag_down;
+                        flag_down = -1 * flag_down;
                         //flag_left = -1*random_number_in_range(0,1)*flag_left;
                     }
                     arrayX[i][j] = 0;
@@ -236,7 +236,7 @@ void DrawBricks()
             if (arrayX[i][j] != 0)
             {
 
-                glRectd(arrayX[i][0], arrayX[0][j] - (yBrickHeight - 1), arrayX[i][0] + (xBrickLength - 1), arrayX[0][j]); //-1 both places to show borders
+                glRectd(arrayX[i][0], arrayX[0][j] - (yBrickHeight - 2), arrayX[i][0] + (xBrickLength - 2), arrayX[0][j]); //-1 both places to show borders
 
                 // glBegin(GL_QUADS);
 
