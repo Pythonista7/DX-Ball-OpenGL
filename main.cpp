@@ -31,7 +31,7 @@ int main( int argc , char* args[] )
     glutInitDisplayMode( GLUT_SINGLE );
 
     glutInitWindowSize(SCREEN_WIDTH,SCREEN_HEIGHT);
-    glutCreateWindow("Ashwin.M.S");
+    glutCreateWindow("Breakout");
 
     if(!initGL())
     {

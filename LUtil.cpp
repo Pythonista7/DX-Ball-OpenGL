@@ -14,7 +14,7 @@ void build_array()
     {
         for (int j = 0; j < 7; j++)
         {
-            arrayX[i][j] = 1;
+            arrayX[i][j] = random_number_in_range(1,4);
         }
     }
     for (int j = 1; j < 7; j++)
@@ -69,7 +69,7 @@ int random_number_in_range(int start, int end)
 //Dictates ball speed
 //float delta_y_ = 0.025 * random_number_in_range(0, 3);
 //float delta_x_ = 0.025 * random_number_in_range(0, 3);
-float delta_x_ = 0.05 + 0.01 * random_number_in_range(1, 3), delta_y_ = 0.1 + 0.01 * random_number_in_range(1, 3);
+float delta_x_ = 0.05 + 0.01 * random_number_in_range(1, 3), delta_y_ = 0.05 + 0.01 * random_number_in_range(1, 3);
 
 bool initGL()
 {
@@ -153,18 +153,21 @@ void DrawPaddle()
 
 void collisionDetection()
 {
+    int i,j;
     if (y < -180)
     {
-        for (int i = 1; i < 11; i++)
+        for ( i = 1; i < 11; i++)
         {
-            for (int j = 1; j < 6; j++)
+            for ( j = 1; j < 6; j++)
                 if (y > arrayX[0][j + 1] && y < arrayX[0][j] && x < arrayX[i + 1][0] && x > arrayX[i][0])
                 {
                     if (arrayX[i][j] != 0)
                     {
-                        score++;
+                        score+=arrayX[i][j];
+                        //printf("%d\n",arrayX[i][j]);
+                        DrawCircle(x, y, BALL_RADII + 11, 20);
                         v = -1 * v;
-                        flag_down = -1*flag_down;
+                        flag_down = -1 * flag_down;
                         //flag_left = -1*random_number_in_range(0,1)*flag_left;
                     }
                     arrayX[i][j] = 0;
@@ -173,14 +176,15 @@ void collisionDetection()
                     // DrawBricks();
                     // glutPostRedisplay();
                     //re-render screen
-                    // for (int i = 0; i < 11; i++)
-                    // {
-                    //     for (int j = 0; j < 6; j++)
-                    //     {
-                    //         printf("%d\t", arrayX[i][j]);
-                    //     }
-                    //     printf("\n");
-                    // }
+                    //for (int i = 0; i < 11; i++)
+                    //{
+                    //    for (int j = 0; j < 6; j++)
+                    //    {
+                    //        printf("%d\t", arrayX[i][j]);
+                    //    }
+                    //    printf("\n");
+                    //}
+                    break;
                 }
         }
     }
@@ -205,18 +209,14 @@ void collisionDetection()
         flag_down = 1;
         v = 1;
     }
-
     //CHECK BOTTOME PADDLE IMPACT
     if ((x > paddle_left && x < paddle_right) && y >= SCREEN_HEIGHT - 50 - PADDLE_HEIGHT && flag_down == 1)
     {
-        // printf("%d",random_number_in_range(0,3));
-        if (score % 3 == 0)
-        {
-            delta_y_ += 0.025 * random_number_in_range(0, 3);
-            delta_x_ += 0.025 * random_number_in_range(0, 3);
-        }
-        //printf("delta_y=%d \t",delta_y_);
-        //printf("delta_x=%d \t HIT\n",delta_x_);
+          
+       
+        delta_y_ += 0.01 * random_number_in_range(1, 2);
+        delta_x_ += 0.01 * random_number_in_range(1, 2);
+
         score++;
         flag_down = -1;
         v = -1;
@@ -236,6 +236,7 @@ void DrawBricks()
             if (arrayX[i][j] != 0)
             {
 
+                glColor3f(arrayX[i][j] * 7 *0.05, arrayX[i][j] * 5 * 0.05, arrayX[i][j] * 3 * 0.05);
                 glRectd(arrayX[i][0], arrayX[0][j] - (yBrickHeight - 1), arrayX[i][0] + (xBrickLength - 1), arrayX[0][j]); //-1 both places to show borders
 
                 // glBegin(GL_QUADS);
@@ -276,7 +277,6 @@ void update()
     //x < paddle_left && x > paddle_right &&
 
     collisionDetection();
-
     DrawBricks();
 
     glutPostRedisplay();
