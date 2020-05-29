@@ -369,7 +369,7 @@ void welcomeDisplay()
     }
 
     glColor3f(1, 1, 1);
-    glRasterPos3f(-250, 400, 0);
+    glRasterPos3f(-240, 400, 0);
     for (int i = 0; i < strlen(msg5); i++)
     {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg5[i]);
