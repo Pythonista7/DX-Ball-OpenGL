@@ -375,6 +375,47 @@ void welcomeDisplay()
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg5[i]);
     }
 
+    /*char msg1[] = "GAME OVER!";
+    char msg2[] = "Score:";
+    //char msg3[] = "HIGH SCORE!!";
+    char msg4[] = "Press q to quit";
+    char msg5[] = "Press x to restart the game";
+
+    glColor3f(1,0,0);
+    glRasterPos3f(-150, -350, 0);
+    for (int i = 0; i < strlen(msg1); i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg1[i]);
+    }
+
+    glColor3f(1, 1, 0);
+    glRasterPos3f(-60, -100, 0);
+    for (int i = 0; i < strlen(msg2); i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg2[i]);
+    }
+
+    glColor3f(0, 1, 0);
+    glRasterPos3f(-5, 0, 0);
+    char s[3];
+    sprintf( s, "%d", score );
+    for (int i = 0; i < 3; i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
+    }
+
+    glColor3f(1, 1, 1);
+    glRasterPos3f(-130, 350, 0);
+    for (int i = 0; i < strlen(msg4); i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg5[i]);
+    }
+    glRasterPos3f(-245, 420, 0);
+    for (int i = 0; i < strlen(msg5); i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg5[i]);
+    }*/
+
     glutSwapBuffers();
 }
 
