@@ -92,3 +92,8 @@ void DrawBricks();
 /*
 function used to draw bricks
 */
+
+void welcomeDisplay();
+/*
+Opening Screen
+*/

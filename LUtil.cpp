@@ -2,6 +2,7 @@
 
 #define pi 3.142857
 
+
 //SCORE 1 point everytime you hit
 int score = 0;
 
@@ -70,6 +71,20 @@ int random_number_in_range(int start, int end)
 //float delta_y_ = 0.025 * random_number_in_range(0, 3);
 //float delta_x_ = 0.025 * random_number_in_range(0, 3);
 float delta_x_ = 0.05 + 0.01 * random_number_in_range(1, 3), delta_y_ = 0.05 + 0.01 * random_number_in_range(1, 3);
+
+
+void RenderString(GLdouble x, GLdouble y, char* str)
+{
+    glPushMatrix();
+    glColor3d(1.0, 0.0, 0.0);
+    glRasterPos2d(x, y);
+    for (int n=0; n<strlen(str); ++n) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, str[n]);
+        printf("%c\t|",str[n]);
+    }
+    glutPostRedisplay();
+   glPopMatrix();
+}
 
 bool initGL()
 {
@@ -152,7 +167,7 @@ void DrawPaddle()
 }
 
 void collisionDetection()
-{
+{   
     int i,j;
     if (y < -180)
     {
@@ -169,6 +184,7 @@ void collisionDetection()
                         v = -1 * v;
                         flag_down = -1 * flag_down;
                         //flag_left = -1*random_number_in_range(0,1)*flag_left;
+                        
                     }
                     arrayX[i][j] = 0;
                     //reflect_ball_logic
@@ -184,6 +200,8 @@ void collisionDetection()
                     //    }
                     //    printf("\n");
                     //}
+                    // glClear(GL_COLOR_BUFFER_BIT);
+                     
                     break;
                 }
         }
@@ -237,7 +255,7 @@ void DrawBricks()
             {
 
                 glColor3f(arrayX[i][j] * 7 *0.05, arrayX[i][j] * 5 * 0.05, arrayX[i][j] * 3 * 0.05);
-                glRectd(arrayX[i][0], arrayX[0][j] - (yBrickHeight - 1), arrayX[i][0] + (xBrickLength - 1), arrayX[0][j]); //-1 both places to show borders
+                glRectd(arrayX[i][0], arrayX[0][j] - (yBrickHeight - 2), arrayX[i][0] + (xBrickLength - 2), arrayX[0][j]); //-1 both places to show borders
 
                 // glBegin(GL_QUADS);
 
@@ -254,6 +272,7 @@ void DrawBricks()
 
 void update()
 {
+    
     //Testing
     DrawCircle(x, y, BALL_RADII, 8);
     DrawWalls();
@@ -294,7 +313,7 @@ void render()
 {
     //Clear color buffer and set it to the color specified in glClearColor() in initGL()
     glClear(GL_COLOR_BUFFER_BIT);
-
+    
     //Reset Model View Matrix
     //projection matrix controls how the geometry is viewed
     //modelview matrix tranformations control how geometry is placed in the rendering world.
@@ -309,8 +328,40 @@ void render()
     glFlush();
 }
 
+void welcomeDisplay()
+{
+  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+  glColor3f(1,0,0);
+  char msg0[] = "Welcome to";
+  char msg1[] = "BREAKOUT";
+  char msg2[] = "Submitted by:";
+  char msg3[] = "Ashwin M.S. - 1CR17CS024";
+  char msg4[] = "Aayush Roy - 1CR17CS003";
+  char msg5[] = "Press x to start the game";
+  //set the position on the screen
+  
+  glRasterPos3f(-400,-50,0);
+
+  for(int i=0;i<strlen(msg0);i++)
+  { 
+    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg0[i]);
+  }
+  for(int i=0;i<strlen(msg1);i++)
+  { 
+    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg1[i]);
+  }
+
+  glutSwapBuffers();
+}
+
+
 void handleKeys(unsigned char key, int x, int y)
 {
+    if(key == 'x')
+    {
+        glutDisplayFunc(render);
+    }
+    glutPostRedisplay();
 
     //if left wall is hit stay there until right arrow is pressed
     if (paddle_left <= -(SCREEN_WIDTH - 100))
@@ -342,6 +393,9 @@ void handleKeys(unsigned char key, int x, int y)
     }
 }
 
+
+
+
 void runMainLoop(int val)
 {
 
@@ -351,9 +405,10 @@ void runMainLoop(int val)
         build_array();
         val = 1;
     }
+    
     render();
     update();
-    glutIdleFunc(update);
+    
 
     //Run frame one more time
     //glutTimerFunc(25,runMainLoop,val);//1000/SCREEN_FPS ,runMainLoop , val );

@@ -9,6 +9,7 @@ Post Condition:
 Side Effects:
  -Sets glutTimerFunc
 */
+int game_state = 0;
 
 int main( int argc , char* args[] )
 {
@@ -44,10 +45,13 @@ int main( int argc , char* args[] )
     glutKeyboardFunc(handleKeys);
 
     //Set rendering function
-    glutDisplayFunc(render);
-
+     if(game_state == 1)
+        glutDisplayFunc(render);
+    if(game_state==0)
+        glutDisplayFunc(welcomeDisplay);
+        
     //Setting up Idle func to update
-    
+    glutIdleFunc(update);
 
     //Set main loop
     runMainLoop(0);
