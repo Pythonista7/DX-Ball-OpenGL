@@ -9,6 +9,7 @@ Post Condition:
 Side Effects:
  -Sets glutTimerFunc
 */
+int game_state = 0;
 
 int main( int argc , char* args[] )
 {
@@ -31,7 +32,7 @@ int main( int argc , char* args[] )
     glutInitDisplayMode( GLUT_SINGLE );
 
     glutInitWindowSize(SCREEN_WIDTH,SCREEN_HEIGHT);
-    glutCreateWindow("Ashwin.M.S");
+    glutCreateWindow("Breakout");
 
     if(!initGL())
     {
@@ -44,13 +45,19 @@ int main( int argc , char* args[] )
     glutKeyboardFunc(handleKeys);
 
     //Set rendering function
-    glutDisplayFunc(render);
-
+    // if(game_state == 1)
+    //     {
+    //         glutDisplayFunc(render);
+    //         glutIdleFunc(update);
+    //     }
+    // if(game_state==0)
+    glutDisplayFunc(welcomeDisplay);
+        
     //Setting up Idle func to update
     
 
     //Set main loop
-    runMainLoop(0);
+    runMainLoop(game_state);
 
     //glutTimerFunc(5,runMainLoop,0);
 
