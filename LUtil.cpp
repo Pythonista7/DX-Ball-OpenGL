@@ -302,7 +302,8 @@ void update()
         //printf("x=%d  \t  paddle_left=%d \t paddle_right=%d\n",x,paddle_left,paddle_right);
         printf("GAME OVER\n");
         printf("SCORE : %d\n", score);
-        exit(0);
+        glutDisplayFunc(endGameDisplay);
+        //exit(0);
     }
 }
 
@@ -322,6 +323,50 @@ void render()
     DrawWalls();
     DrawPaddle();
     DrawBricks();
+    glFlush();
+}
+void endGameDisplay()
+{
+    char msg1[] = "GAME OVER!";
+    char msg2[] = "Score:";
+    //char msg3[] = "HIGH SCORE!!";
+    char msg4[] = "Press q to quit";
+    char msg5[] = "Press x to restart the game";
+
+    glColor3f(1,0,0);
+    glRasterPos3f(-150, -350, 0);
+    for (int i = 0; i < strlen(msg1); i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg1[i]);
+    }
+
+    glColor3f(1, 1, 0);
+    glRasterPos3f(-60, -100, 0);
+    for (int i = 0; i < strlen(msg2); i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg2[i]);
+    }
+
+    glColor3f(0, 1, 0);
+    glRasterPos3f(-5, 0, 0);
+    char s[3];
+    sprintf( s, "%d", score );
+    for (int i = 0; i < 3; i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
+    }
+
+    glColor3f(1, 1, 1);
+    glRasterPos3f(-130, 350, 0);
+    for (int i = 0; i < strlen(msg4); i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg5[i]);
+    }
+    glRasterPos3f(-245, 420, 0);
+    for (int i = 0; i < strlen(msg5); i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg5[i]);
+    }
     glFlush();
 }
 
@@ -375,46 +420,7 @@ void welcomeDisplay()
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg5[i]);
     }
 
-    /*char msg1[] = "GAME OVER!";
-    char msg2[] = "Score:";
-    //char msg3[] = "HIGH SCORE!!";
-    char msg4[] = "Press q to quit";
-    char msg5[] = "Press x to restart the game";
 
-    glColor3f(1,0,0);
-    glRasterPos3f(-150, -350, 0);
-    for (int i = 0; i < strlen(msg1); i++)
-    {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg1[i]);
-    }
-
-    glColor3f(1, 1, 0);
-    glRasterPos3f(-60, -100, 0);
-    for (int i = 0; i < strlen(msg2); i++)
-    {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg2[i]);
-    }
-
-    glColor3f(0, 1, 0);
-    glRasterPos3f(-5, 0, 0);
-    char s[3];
-    sprintf( s, "%d", score );
-    for (int i = 0; i < 3; i++)
-    {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
-    }
-
-    glColor3f(1, 1, 1);
-    glRasterPos3f(-130, 350, 0);
-    for (int i = 0; i < strlen(msg4); i++)
-    {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg5[i]);
-    }
-    glRasterPos3f(-245, 420, 0);
-    for (int i = 0; i < strlen(msg5); i++)
-    {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg5[i]);
-    }*/
 
     glutSwapBuffers();
 }
@@ -423,8 +429,9 @@ void handleKeys(unsigned char key, int x, int y)
 {
     if (key == 'x')
     {
-        start = 1;
+        //game_state = 1;
         glutDisplayFunc(render);
+        glutIdleFunc(update);
     }
     glutPostRedisplay();
 
@@ -465,11 +472,17 @@ void runMainLoop(int val)
     if (val == 0)
     {
         build_array();
-        val = 1;
+        welcomeDisplay();
+
     }
 
-    render();
-    update();
+    else if(val==1)
+    {
+        val = 1;
+        render();
+        update();
+        glutIdleFunc(update);
+    }
 
     //Run frame one more time
     //glutTimerFunc(25,runMainLoop,val);//1000/SCREEN_FPS ,runMainLoop , val );

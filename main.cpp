@@ -45,16 +45,19 @@ int main( int argc , char* args[] )
     glutKeyboardFunc(handleKeys);
 
     //Set rendering function
-     if(game_state == 1)
-        glutDisplayFunc(render);
-    if(game_state==0)
-        glutDisplayFunc(welcomeDisplay);
+    // if(game_state == 1)
+    //     {
+    //         glutDisplayFunc(render);
+    //         glutIdleFunc(update);
+    //     }
+    // if(game_state==0)
+    glutDisplayFunc(welcomeDisplay);
         
     //Setting up Idle func to update
-    glutIdleFunc(update);
+    
 
     //Set main loop
-    runMainLoop(0);
+    runMainLoop(game_state);
 
     //glutTimerFunc(5,runMainLoop,0);
 

@@ -97,3 +97,8 @@ void welcomeDisplay();
 /*
 Opening Screen
 */
+
+void endGameDisplay();
+/*
+Game over screen
+*/
