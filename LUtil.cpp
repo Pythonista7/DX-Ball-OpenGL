@@ -2,10 +2,41 @@
 
 #define pi 3.142857
 
+int game_state;
+
 //SCORE 1 point everytime you hit
 int score = 0;
-int start = 0;
 int arrayX[12][7]; // {-590, -472, -354, -236, -118, 0, 118, 236, 354, 472, 999};
+
+
+//int arrayY[] = {-180, -230, -280, -330, -380, 999};
+
+//"gColorMode" controls whether we render a solid cyan square or a multicolored square.
+int gColorMode = COLOR_MODE_MULTI;
+
+//"gProjectionScale" controls how large of a coordinate area we want to render.
+GLfloat gProjectionScale = 1.f;
+
+//lak_ctr-->left_arrow_key_counter
+int lak_ctr = 0;
+int rak_ctr = 0;
+
+//left/right wall
+int left_wall = -(SCREEN_WIDTH - 50);
+int right_wall = SCREEN_WIDTH - 50;
+
+//left/right paddle and factor to move
+int factor = 0, paddle_left = 0, paddle_right = 0;
+
+//x and y for ball center
+float x = 50, y = SCREEN_HEIGHT - 50 - PADDLE_HEIGHT;
+
+//h and v are factors to hold +ve/-ve signs for movement directions
+int h = 1, v = -1;
+//to chk if ball is movin up/down or right/left
+int flag_down = -1, flag_left = -1; // (h/v)*cor-ord value much give appropriate dir wrt the x/y axes
+
+//Initilize bricks
 void build_array()
 {
     int yCoordinateLocal = yCoordinateGlobal;
@@ -29,31 +60,8 @@ void build_array()
     }
     arrayX[0][0] = 0;
 }
-//int arrayY[] = {-180, -230, -280, -330, -380, 999};
 
-//"gColorMode" controls whether we render a solid cyan square or a multicolored square.
-int gColorMode = COLOR_MODE_MULTI;
 
-//"gProjectionScale" controls how large of a coordinate area we want to render.
-GLfloat gProjectionScale = 1.f;
-
-//lak_ctr-->left_arrow_key_counter
-int lak_ctr = 0;
-int rak_ctr = 0;
-
-//left/right wall
-int left_wall = -(SCREEN_WIDTH - 50);
-int right_wall = SCREEN_WIDTH - 50;
-
-//left/right paddle and factor to move
-int factor = 0, paddle_left = 0, paddle_right = 0;
-
-//x and y for ball center
-float x = 50, y = SCREEN_HEIGHT - 50 - PADDLE_HEIGHT;
-//h and v are factors to hold +ve/-ve signs for movement directions
-int h = 1, v = -1;
-//to chk if ball is movin up/down or right/left
-int flag_down = -1, flag_left = -1; // (h/v)*cor-ord value much give appropriate dir wrt the x/y axes
 
 //util function to generate random number in a given range
 int random_number_in_range(int start, int end)
@@ -69,7 +77,8 @@ int random_number_in_range(int start, int end)
 //Dictates ball speed
 //float delta_y_ = 0.025 * random_number_in_range(0, 3);
 //float delta_x_ = 0.025 * random_number_in_range(0, 3);
-float delta_x_ = 0.05 + 0.01 * random_number_in_range(1, 3), delta_y_ = 0.05 + 0.01 * random_number_in_range(1, 3);
+float delta_x_ = 0.05 + 0.01 * random_number_in_range(1, 3), 
+      delta_y_ = 0.05 + 0.01 * random_number_in_range(1, 3);
 
 void RenderString(GLdouble x, GLdouble y, char *str)
 {
@@ -165,78 +174,7 @@ void DrawPaddle()
     glEnd();
 }
 
-void collisionDetection()
-{
-    int i, j;
-    if (y < -180)
-    {
-        for (i = 1; i < 11; i++)
-        {
-            for (j = 1; j < 6; j++)
-                if (y > arrayX[0][j + 1] && y < arrayX[0][j] && x < arrayX[i + 1][0] && x > arrayX[i][0])
-                {
-                    if (arrayX[i][j] != 0)
-                    {
-                        score += arrayX[i][j];
-                        //printf("%d\n",arrayX[i][j]);
-                        DrawCircle(x, y, BALL_RADII + 11, 20);
-                        v = -1 * v;
-                        flag_down = -1 * flag_down;
-                        //flag_left = -1*random_number_in_range(0,1)*flag_left;
-                    }
-                    arrayX[i][j] = 0;
-                    //reflect_ball_logic
-                    // v = -1;
-                    // DrawBricks();
-                    // glutPostRedisplay();
-                    //re-render screen
-                    //for (int i = 0; i < 11; i++)
-                    //{
-                    //    for (int j = 0; j < 6; j++)
-                    //    {
-                    //        printf("%d\t", arrayX[i][j]);
-                    //    }
-                    //    printf("\n");
-                    //}
-                    // glClear(GL_COLOR_BUFFER_BIT);
 
-                    break;
-                }
-        }
-    }
-
-    //BOUNDRY CONDITIONS
-    //CHECK RIGHT WALL IMPACT
-    if (x >= right_wall && flag_left == -1)
-    {
-        flag_left = 1;
-        h = -1;
-    }
-    //CHECK LEFT WALL IMPACT
-    if (x <= left_wall && flag_left == 1)
-    {
-        flag_left = -1;
-        h = 1;
-    }
-
-    //CHECK TOP WALL IMPACT
-    if (y <= -(SCREEN_HEIGHT - 50) && flag_down == -1) //0
-    {
-        flag_down = 1;
-        v = 1;
-    }
-    //CHECK BOTTOME PADDLE IMPACT
-    if ((x > paddle_left && x < paddle_right) && y >= SCREEN_HEIGHT - 50 - PADDLE_HEIGHT && flag_down == 1)
-    {
-
-        delta_y_ += 0.01 * random_number_in_range(1, 2);
-        delta_x_ += 0.01 * random_number_in_range(1, 2);
-
-        score++;
-        flag_down = -1;
-        v = -1;
-    }
-}
 
 void DrawBricks()
 {
@@ -266,65 +204,7 @@ void DrawBricks()
         }
     }
 }
-
-void update()
-{
-
-    //Testing
-    DrawCircle(x, y, BALL_RADII, 8);
-    DrawWalls();
-    DrawPaddle();
-
-    //Adding randomness to the ball movement speed
-
-    x = x + float(delta_x_ * h);
-    y = y + float(delta_y_ * v);
-
-    int i = 0;
-
-    //Mainly for debugging
-    //printf("flag_down = %d\n",flag_down);
-    //if(y>SCREEN_HEIGHT-200)
-    //{
-    //    printf("%d  \t %d  \t %d\n",(x > paddle_left && x < paddle_right),y==SCREEN_HEIGHT-50-PADDLE_HEIGHT,flag_down==1 );
-    //    printf("y = %d \t paddle_y= %d \n",y,SCREEN_HEIGHT-50-PADDLE_HEIGHT);
-    //}
-    //PADDLE IMPACT CHECK
-    //x < paddle_left && x > paddle_right &&
-
-    collisionDetection();
-    DrawBricks();
-
-    glutPostRedisplay();
-
-    if (y > SCREEN_HEIGHT) //condition when ball wont be within the reach of the paddle
-    {
-        //printf("x=%d  \t  paddle_left=%d \t paddle_right=%d\n",x,paddle_left,paddle_right);
-        printf("GAME OVER\n");
-        printf("SCORE : %d\n", score);
-        glutDisplayFunc(endGameDisplay);
-        //exit(0);
-    }
-}
-
-void render()
-{
-    //Clear color buffer and set it to the color specified in glClearColor() in initGL()
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    //Reset Model View Matrix
-    //projection matrix controls how the geometry is viewed
-    //modelview matrix tranformations control how geometry is placed in the rendering world.
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    //drawing all game objects
-    DrawCircle(x, y, BALL_RADII, 8);
-    DrawWalls();
-    DrawPaddle();
-    DrawBricks();
-    glFlush();
-}
+/////////////////////////////
 void endGameDisplay()
 {
     char msg1[] = "GAME OVER!";
@@ -424,14 +304,177 @@ void welcomeDisplay()
 
     glutSwapBuffers();
 }
+/////////////////////////////////////
+
+void collisionDetection()
+{
+    int i, j;
+    if (y < -180)
+    {
+        for (i = 1; i < 11; i++)
+        {
+            for (j = 1; j < 6; j++)
+                if (y > arrayX[0][j + 1] && y < arrayX[0][j] && x < arrayX[i + 1][0] && x > arrayX[i][0])
+                {
+                    if (arrayX[i][j] != 0 && arrayX[i][j]!=4)
+                    {
+                        score += arrayX[i][j];
+                        //printf("%d\n",arrayX[i][j]);
+                        DrawCircle(x, y, BALL_RADII + 11, 20);
+                        v = -1 * v;
+                        flag_down = -1 * flag_down;
+                        //flag_left = -1*random_number_in_range(0,1)*flag_left;
+                        
+                    }
+                    
+                   arrayX[i][j] = 0;
+                    
+                        
+                
+                    
+                    //reflect_ball_logic
+                    // v = -1;
+                    // DrawBricks();
+                    // glutPostRedisplay();
+                    //re-render screen
+                    //for (int i = 0; i < 11; i++)
+                    //{
+                    //    for (int j = 0; j < 6; j++)
+                    //    {
+                    //        printf("%d\t", arrayX[i][j]);
+                    //    }
+                    //    printf("\n");
+                    //}
+                    // glClear(GL_COLOR_BUFFER_BIT);
+
+                    break;
+                }
+        }
+    }
+
+    //BOUNDRY CONDITIONS
+    //CHECK RIGHT WALL IMPACT
+    if (x >= right_wall && flag_left == -1)
+    {
+        flag_left = 1;
+        h = -1;
+    }
+    //CHECK LEFT WALL IMPACT
+    if (x <= left_wall && flag_left == 1)
+    {
+        flag_left = -1;
+        h = 1;
+    }
+
+    //CHECK TOP WALL IMPACT
+    if (y <= -(SCREEN_HEIGHT - 50) && flag_down == -1) //0
+    {
+        flag_down = 1;
+        v = 1;
+    }
+    //CHECK BOTTOME PADDLE IMPACT
+    if ((x > paddle_left && x < paddle_right) && y >= SCREEN_HEIGHT - 50 - PADDLE_HEIGHT && flag_down == 1)
+    {
+        // Capping max ball speed
+        if(delta_x_<0.1 || delta_y_<0.35)
+        {   
+            delta_y_ += 0.01 * random_number_in_range(1, 2);
+            delta_x_ += 0.01 * random_number_in_range(1, 2);
+        }
+        score++;
+        flag_down = -1;
+        v = -1;
+    }
+}
+////////////////////////////////////////////
+
+
+void update()
+{
+
+    //Testing
+    DrawCircle(x, y, BALL_RADII, 8);
+    DrawWalls();
+    DrawPaddle();
+
+    //Adding randomness to the ball movement speed
+
+    x = x + float(delta_x_ * h);
+    y = y + float(delta_y_ * v);
+
+    int i = 0;
+
+    //Mainly for debugging
+    //printf("flag_down = %d\n",flag_down);
+    //if(y>SCREEN_HEIGHT-200)
+    //{
+    //    printf("%d  \t %d  \t %d\n",(x > paddle_left && x < paddle_right),y==SCREEN_HEIGHT-50-PADDLE_HEIGHT,flag_down==1 );
+    //    printf("y = %d \t paddle_y= %d \n",y,SCREEN_HEIGHT-50-PADDLE_HEIGHT);
+    //}
+    //PADDLE IMPACT CHECK
+    //x < paddle_left && x > paddle_right &&
+
+    collisionDetection();
+    DrawBricks();
+
+    glutPostRedisplay();
+
+    if (y > SCREEN_HEIGHT) //condition when ball wont be within the reach of the paddle
+    {
+        //printf("PADDLE FUNC\nx=%d  \ty=%d \t  paddle_left=%d \t paddle_right=%d\n",x,y,paddle_left,paddle_right);
+        printf("GAME OVER\n");
+        printf("SCORE : %d\n", score);
+        game_state=-1;
+        glutDisplayFunc(endGameDisplay);
+        glutIdleFunc(NULL);
+        x = 0, y = 0;
+        delta_x_ = 0.05 + 0.01 * random_number_in_range(1, 3);
+        delta_y_ = 0.05 + 0.01 * random_number_in_range(1, 3);
+        //exit(0);
+    }
+}
+
+void render()
+{
+    //Clear color buffer and set it to the color specified in glClearColor() in initGL()
+    glClear(GL_COLOR_BUFFER_BIT);
+   
+    //Reset Model View Matrix
+    //projection matrix controls how the geometry is viewed
+    //modelview matrix tranformations control how geometry is placed in the rendering world.
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    //drawing all game objects
+    DrawCircle(x, y, BALL_RADII, 8);
+    DrawWalls();
+    DrawPaddle();
+    DrawBricks();
+    glFlush();
+}
 
 void handleKeys(unsigned char key, int x, int y)
 {
     if (key == 'x')
     {
-        //game_state = 1;
-        glutDisplayFunc(render);
-        glutIdleFunc(update);
+
+        if(game_state==0)
+        {
+            glutDisplayFunc(render);
+            glutIdleFunc(update);
+            game_state=1;   
+        }
+        else if(game_state==-1)
+        {
+            build_array();
+            score=0;
+                      
+            game_state=1;
+            
+            glutDisplayFunc(render);
+            glutIdleFunc(update);
+            
+        }
     }
     glutPostRedisplay();
 
@@ -467,23 +510,16 @@ void handleKeys(unsigned char key, int x, int y)
 
 void runMainLoop(int val)
 {
-
+    game_state=val;
     //Frame Logic
-    if (val == 0)
-    {
-        build_array();
-        welcomeDisplay();
 
-    }
+    build_array();
+    welcomeDisplay();
+    glutIdleFunc(NULL);
+    
 
-    else if(val==1)
-    {
-        val = 1;
-        render();
-        update();
-        glutIdleFunc(update);
-    }
 
+    
     //Run frame one more time
     //glutTimerFunc(25,runMainLoop,val);//1000/SCREEN_FPS ,runMainLoop , val );
 }

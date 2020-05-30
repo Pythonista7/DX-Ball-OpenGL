@@ -9,14 +9,14 @@ Post Condition:
 Side Effects:
  -Sets glutTimerFunc
 */
-int game_state = 0;
 
 int main( int argc , char* args[] )
 {
     //Initialize FreeGLUT
     glutInit(&argc,args);
 
-    
+    int game_state = 0;
+
     /* 
     In this application, we're going to use a double buffered window.
     What this means is that we have two buffers, a front and back buffer. 
@@ -44,16 +44,8 @@ int main( int argc , char* args[] )
     //Set keyboard handler
     glutKeyboardFunc(handleKeys);
 
-    //Set rendering function
-    // if(game_state == 1)
-    //     {
-    //         glutDisplayFunc(render);
-    //         glutIdleFunc(update);
-    //     }
-    // if(game_state==0)
+
     glutDisplayFunc(welcomeDisplay);
-        
-    //Setting up Idle func to update
     
 
     //Set main loop
