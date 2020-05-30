@@ -240,7 +240,7 @@ void endGameDisplay()
     glRasterPos3f(-130, 350, 0);
     for (int i = 0; i < strlen(msg4); i++)
     {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg5[i]);
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, msg4[i]);
     }
     glRasterPos3f(-245, 420, 0);
     for (int i = 0; i < strlen(msg5); i++)
