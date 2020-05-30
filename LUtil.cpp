@@ -316,7 +316,7 @@ void collisionDetection()
             for (j = 1; j < 6; j++)
                 if (y > arrayX[0][j + 1] && y < arrayX[0][j] && x < arrayX[i + 1][0] && x > arrayX[i][0])
                 {
-                    if (arrayX[i][j] != 0 && arrayX[i][j]!=4)
+                    if (arrayX[i][j] != 0 )
                     {
                         score += arrayX[i][j];
                         //printf("%d\n",arrayX[i][j]);
@@ -327,7 +327,7 @@ void collisionDetection()
                         
                     }
                     
-                   arrayX[i][j] = 0;
+                   arrayX[i][j] = 0 ;//? (arrayX[i][j]-2)<0 : arrayX[i][j]-2 ;
                     
                         
                 
@@ -455,6 +455,9 @@ void render()
 
 void handleKeys(unsigned char key, int x, int y)
 {
+    if (key == 'q' && game_state==-1)
+        exit(0);
+        
     if (key == 'x')
     {
 
