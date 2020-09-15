@@ -3,7 +3,7 @@
 
 ![](demo.gif)
 
-#Requriments
+# Requriments
 
 (assuming you have g++ installed else please get that too)
 
